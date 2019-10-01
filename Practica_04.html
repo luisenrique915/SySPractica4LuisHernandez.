@@ -1,0 +1,481 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Pr&aacute;ctica 4: Convoluci&oacute;n y Correlaci&oacute;n de se&ntilde;ales en tiempo continuo</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-10-01"><meta name="DC.source" content="Practica_04.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Pr&aacute;ctica 4: Convoluci&oacute;n y Correlaci&oacute;n de se&ntilde;ales en tiempo continuo</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Datos generales:</a></li><li><a href="#3">Objetivos:</a></li><li><a href="#4">Introducci&oacute;n</a></li><li><a href="#21">Desarrollo</a></li><li><a href="#22">Problema 1 PR04</a></li><li><a href="#26">Problema 3 PR04</a></li><li><a href="#31">Problema e) PR06</a></li><li><a href="#35">Problema f) PR06</a></li></ul></div><h2 id="1">Datos generales:</h2><p>Autores:</p><div><ul><li>Luis Enrique Hernandez Lugardo</li></ul></div><div><ul><li>Silverio Jim&eacute;nez Cesar Antonio</li></ul></div><h2 id="3">Objetivos:</h2><div><ul><li>Conocer m&eacute;todos b&aacute;sicos de integraci&oacute;n num&eacute;rica</li><li>Manipulaci&oacute;n de instrucciones en MATLAB</li><li>Simular convoluciones y correlaciones de se&ntilde;ales continuas</li></ul></div><h2 id="4">Introducci&oacute;n</h2><p>Elabore un reporte de los m&eacute;todos descritos en la lista de reproducci&oacute;n que incluya el desarrollo de los ejemplos expuestos.</p><div><ul><li>1. M&eacute;todos num&eacute;ricos: Teorema fundamental del C&aacute;lculo, Integraci&oacute;n 1 <a href="https://www.youtube.com/watch?v=OFHAN-WwLEw&amp;t=2s">https://www.youtube.com/watch?v=OFHAN-WwLEw&amp;t=2s</a></li></ul></div><p><img vspace="5" hspace="5" src="v1_eq01.png" alt=""> </p><p>segun el teorema fundamental del calculo primero tendriamos que ver si es integrable. (Recordando que toda funcion continua es integrable en un intervalo cualquiera)</p><p><img vspace="5" hspace="5" src="v1_eq02.png" alt=""> </p><p><img vspace="5" hspace="5" src="v1_eq03.png" alt=""> </p><p>El problema que encontramos es que no existe una antiderivada</p><p><img vspace="5" hspace="5" src="v1_eq04.png" alt=""> </p><p>Considerando un polinomio.</p><p><img vspace="5" hspace="5" src="v1_eq05.png" alt=""> </p><p>Eligiendo aproximaf la funcion con el polinomio constante</p><p><img vspace="5" hspace="5" src="v1_eq06.png" alt=""> </p><div><ul><li>2. M&eacute;todos num&eacute;ricos: Newton-Cotes, regla del trapecio, Integraci&oacute;n 2 <a href="https://www.youtube.com/watch?v=Fe79KWPf0Do&amp;t=4s">https://www.youtube.com/watch?v=Fe79KWPf0Do&amp;t=4s</a></li></ul></div><p>Este m&eacute;todo es eficiente si se conocen los valores de la funci&oacute;n en puntos igualmente separados. Si se pueden cambiar los puntos en los cuales la funci&oacute;n es evaluada otros m&eacute;todos como la cuadratura de Gauss son probablemente m&aacute;s eficientes.</p><p><img vspace="5" hspace="5" src="v2_eq01.png" alt=""> </p><p><img vspace="5" hspace="5" src="v2_eq02.png" alt=""> </p><p>Funcion igual a un polinomio de grado 1,2,3...n que concide con la funcion en determinados puntos mas un termino de error</p><p><img vspace="5" hspace="5" src="v2_eq03.png" alt=""> </p><p>Formula cerrada de (n+1)puntos  de Newton-Cotes, donde:</p><p><img vspace="5" hspace="5" src="v2_eq04.png" alt=""> </p><p><img vspace="5" hspace="5" src="v2_eq05.png" alt=""> </p><p>Debemos encontrar el valor de xi como parte real y parte imaginaria.</p><p><img vspace="5" hspace="5" src="v2_eq06.png" alt=""> </p><p>Realizamos la integral de la exponencial.</p><p><img vspace="5" hspace="5" src="v2_eq07.png" alt=""> </p><div><ul><li>3. M&eacute;todos num&eacute;ricos: Newton-Cotes, regla de Simpson, regla de 3/8 de Simpson, Integraci&oacute;n 3 <a href="https://www.youtube.com/watch?v=Ykgdo9Sr354">https://www.youtube.com/watch?v=Ykgdo9Sr354</a></li></ul></div><p>Se utilizan los polin&oacute;mios de intercalacion de lenguaje</p><p><img vspace="5" hspace="5" src="v3_eq01.png" alt=""> </p><p><img vspace="5" hspace="5" src="v3_eq02.png" alt=""> </p><p>formula cerrada de (n+1) puntos de Newton.</p><p><img vspace="5" hspace="5" src="v3_eq03.png" alt=""> </p><p><img vspace="5" hspace="5" src="v3_eq04.png" alt=""> </p><p><img vspace="5" hspace="5" src="v3_eq05.png" alt=""> </p><p><img vspace="5" hspace="5" src="v3_eq06.png" alt=""> </p><p><img vspace="5" hspace="5" src="v3_eq07.png" alt=""> </p><div><ul><li>4. M&eacute;todos num&eacute;ricos: regla del trapecio compuesta , regla de Simpson compuesta, Integraci&oacute;n 4 <a href="https://www.youtube.com/watch?v=UJMZviPb6GE&amp;t=1s">https://www.youtube.com/watch?v=UJMZviPb6GE&amp;t=1s</a></li></ul></div><p>Formulas cerradas de newton-Cotes Compuestas se divide en varios trapecios para tener una mejor aproximacion de la funci&oacute;n.</p><p><img vspace="5" hspace="5" src="V4_EQ1.PNG" alt=""> </p><p>La regla compuesta del trapecio nos muestra la manupulacion del error de que los puntos intermedios se tengran que evaluar dos veces.</p><p><img vspace="5" hspace="5" src="V4_EQ2.PNG" alt=""> </p><p>En la regla compuesta de simpson estamos restringidos a que el numero de subinterbalos sea par para que cada dos formen una parabola.</p><p><img vspace="5" hspace="5" src="V4_EQ3.PNG" alt=""> </p><div><ul><li>5. M&eacute;todos num&eacute;ricos: Cuadratura Gaussiana, Integraci&oacute;n 5 <a href="https://www.youtube.com/watch?v=6i4N328QbpY&amp;t=3s">https://www.youtube.com/watch?v=6i4N328QbpY&amp;t=3s</a></li></ul></div><p><img vspace="5" hspace="5" src="V5_EQ1.PNG" alt=""> </p><h2 id="21">Desarrollo</h2><p>Para el desarrollo se tienen que resolver cada uno de los siguientes problemas comenzando una nueva secci&oacute;n (para la publicaci&oacute;n) en cada uno de ellos.</p><h2 id="22">Problema 1 PR04</h2><p>Realiza la convoluci&oacute;n de las siguientes se&ntilde;ales</p><p><img src="Practica_04_eq11657081759024668198.png" alt="$g(t)=(1-t)[u(t)+u(-t-1)]+(t+1)[u(t-1)+(-t-2)]$"></p><p><img src="Practica_04_eq04985393706330907839.png" alt="$h(t)=u(t)+u(-t-1)$"></p><p>La se&ntilde;al tiene como funcion anal&iacute;tica la siguiente imagen.</p><p><img vspace="5" hspace="5" src="FORMULAPR04-1_1.PNG" alt=""> </p><p>El resultado de cada grafica y su comvolucion es el siguiente.</p><pre class="codeinput">clear <span class="string">all</span>
+figure(12)
+subplot(1,3,1)
+syms <span class="string">t</span>
+x1=piecewise(t&lt;0,0,0&lt;t&lt;1,1-t,1&lt;t&lt;2,t-1,t&gt;2,0);
+fplot(x1,[-1,3],<span class="string">'r'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'g(t)'</span>)
+xlabel(<span class="string">'t'</span>)
+ylabel(<span class="string">'g(t)'</span>)
+axis([-3 3 -3 3])
+subplot(1,3,2)
+x2=piecewise(t&lt;0,0,0&lt;t&lt;1,1,t&gt;1,0);
+fplot(x2,[0,3],<span class="string">'r'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'h(t)'</span>)
+xlabel(<span class="string">'t'</span>)
+ylabel(<span class="string">'h(t)'</span>)
+axis([-2 2 -2 2])
+x=@(t) ((-1*t)+1).*(t&gt;=0&amp;t&lt;=1) + (t-1).*(t&gt;1&amp;t&lt;=2);
+y=@(t) 1.*(t&gt;=0&amp;t&lt;=1);
+t1=(0:0.01:1);
+t2=(1:0.01:2);
+t3=(2:0.01:3);
+subplot(1,3,3)
+hold <span class="string">on</span>
+plot(t1,(t1-(t1.^2/2)))
+plot(t2,((t2.^2)-3*t2+5/2))
+plot(t3,(-((t3.^2)/2)+2*t3-3/2))
+grid <span class="string">on</span>
+title(<span class="string">'x(t)*h(t)'</span>)
+axis([-1 3.6 -2 2]);
+</pre><img vspace="5" hspace="5" src="Practica_04_01.png" alt=""> <p><img vspace="5" hspace="5" src="giff_1.gif" alt=""> </p><h2 id="26">Problema 3 PR04</h2><p>Realiza la convoluci&oacute;n de las siguientes se&ntilde;ales</p><p><img src="Practica_04_eq06218553373410494968.png" alt="$g(t)=t[u(t)+u(-t-1)]+[u(t-1)+u(-t-2)]$"></p><p><img src="Practica_04_eq03980395676913421482.png" alt="$h(t)=[u(t-1)+u(-t-3)]$"></p><p>La se&ntilde;al tiene como funcion anal&iacute;tica la siguiente imagen.</p><p><img vspace="5" hspace="5" src="FORMULAPR04-33.PNG" alt=""> </p><p>El resultado de cada grafica y su comvolucion es el siguiente.</p><pre class="codeinput">clear <span class="string">all</span>
+figure(13)
+subplot(1,3,1)
+syms <span class="string">t</span>
+x1=piecewise(t&lt;0,0,0&lt;t&lt;1,t,1&lt;t&lt;2,1,t&gt;2,0);
+fplot(x1,[-1,3],<span class="string">'r'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'g(t)'</span>)
+xlabel(<span class="string">'t'</span>)
+ylabel(<span class="string">'g(t)'</span>)
+axis([-3 3 -3 3])
+subplot(1,3,2)
+x2=piecewise(t&lt;1,0,1&lt;t&lt;3,1,t&gt;3,0);
+fplot(x2,[0,3],<span class="string">'r'</span>)
+grid <span class="string">on</span>
+title(<span class="string">'h(t)'</span>)
+xlabel(<span class="string">'t'</span>)
+ylabel(<span class="string">'h(t)'</span>)
+axis([-2 4 -2 2])
+t1=(1:0.01:2);
+t2=(2:0.01:3);
+t3=(3:0.01:4);
+t4=(4:0.01:5);
+subplot(1,3,3)
+hold <span class="string">on</span>
+plot(t1,(((t1-1).^2)/2))
+plot(t2,(t2-(3/2)))
+plot(t3,(3/2-((t3-3).^2)/2))
+plot(t4,5-t4)
+grid <span class="string">on</span>
+title(<span class="string">'x(t)*h(t)'</span>)
+axis([-1 7 -2 2]);
+</pre><img vspace="5" hspace="5" src="Practica_04_02.png" alt=""> <p><img vspace="5" hspace="5" src="PR4_02.GIF" alt=""> </p><h2 id="31">Problema e) PR06</h2><p>Realice la autocorrelacion de la siguiente se&ntilde;al</p><p><img src="Practica_04_eq11219766473892374586.png" alt="$x1(t) = u(t) - 2u(t - 3) + u(t - 4)$"></p><p>Utiliza la equivalencia que prefieras</p><p>la funci&oacute;n anal&iacute;tica queda de la siguiente forma:</p><p><img vspace="5" hspace="5" src="FORMULAPR04-3.PNG" alt=""> </p><pre class="codeinput">figure (10)
+x1 = @(t) heaviside(t)-(2.*heaviside(t-3))+heaviside(t-4);  <span class="comment">% % Definimos un x1</span>
+x11 = @(t) heaviside(-t)-(2.*heaviside(-t-3))+heaviside(-t-4); <span class="comment">% % La invertimos</span>
+subplot (1,4,1)
+syms <span class="string">t</span>
+fplot (x1,[-10,10], <span class="string">'r'</span>)
+grid <span class="string">on</span>
+title (<span class="string">'x1(t)'</span>)
+axis ([-10 10, -5 5 ]);
+figure(11)
+t=[-10:0.01:10];
+plot (t, x11 (t))
+grid <span class="string">on</span>
+title(<span class="string">'x11(t)'</span>)
+axis([-10  10 , -5  5]);
+</pre><img vspace="5" hspace="5" src="Practica_04_03.png" alt=""> <img vspace="5" hspace="5" src="Practica_04_04.png" alt=""> <p><img vspace="5" hspace="5" src="pr6_e.gif" alt=""> </p><h2 id="35">Problema f) PR06</h2><p>Realiza la correlaci&oacute;n de <img src="Practica_04_eq10884385100289023745.png" alt="$R_x0x1(t)$"> con las se&ntilde;ales definidas en los ejercicios anteriores, utiliza la equivalencia que prefieras</p><p>la funci&oacute;n anal&iacute;tica queda de la siguiente forma:</p><p><img vspace="5" hspace="5" src="FORMULAPR04-4.PNG" alt=""> </p><pre class="codeinput">figure( 1 )
+subplot (1,4,1)
+syms <span class="string">t</span>
+x0 = @ (t) heaviside (t) - (2.*heaviside(t-2))+heaviside(t-4);
+fplot (x0,[-10 , 10], <span class="string">'r'</span> )
+grid <span class="string">on</span>
+title ( <span class="string">'x0(t)'</span> )
+axis ([-10 10, -5 5]);
+subplot (1,4,2)
+x1 = @(t) heaviside(t)-( 2.*heaviside(t-3))+heaviside(t-4);
+fplot(x1, [-10 ,10 ], <span class="string">'r'</span> )
+hold <span class="string">on</span>
+title(<span class="string">'x1(t)'</span>)
+axis ([-10 10, -5 5]);
+</pre><img vspace="5" hspace="5" src="Practica_04_05.png" alt=""> <p>haciendo a x1 (-t) en x2</p><pre class="codeinput">x2 = @(t) heaviside(-t)-( 2.*heaviside (-t- 3 )) + heaviside (-t- 4 );
+</pre><p><img vspace="5" hspace="5" src="pr6_f.gif" alt=""> </p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Práctica 4: Convolución y Correlación de señales en tiempo continuo
+%% Datos generales:
+% Autores:
+%
+% * Luis Enrique Hernandez Lugardo
+%
+% * Silverio Jiménez Cesar Antonio
+%
+%%
+%% Objetivos:
+% * Conocer métodos básicos de integración numérica
+% * Manipulación de instrucciones en MATLAB
+% * Simular convoluciones y correlaciones de señales continuas
+%% Introducción
+% Elabore un reporte de los métodos descritos en la lista
+% de reproducción que incluya el desarrollo de los ejemplos expuestos. 
+%
+% * 1. Métodos numéricos: Teorema fundamental del Cálculo, Integración 1
+% <https://www.youtube.com/watch?v=OFHAN-WwLEw&t=2s>
+%%
+% <<v1_eq01.png>>
+%
+% segun el teorema fundamental del calculo primero tendriamos que ver si es
+% integrable. (Recordando que toda funcion continua es integrable en un intervalo cualquiera)
+% 
+% <<v1_eq02.png>>
+% 
+% 
+% <<v1_eq03.png>>
+% 
+% El problema que encontramos es que no existe una antiderivada
+% 
+% <<v1_eq04.png>>
+% 
+% Considerando un polinomio.
+% 
+% <<v1_eq05.png>>
+% 
+% Eligiendo aproximaf la funcion con el polinomio constante
+% 
+% <<v1_eq06.png>>
+% 
+%%
+%
+% * 2. Métodos numéricos: Newton-Cotes, regla del trapecio, Integración 2
+% <https://www.youtube.com/watch?v=Fe79KWPf0Do&t=4s>
+%%
+% Este método es eficiente si se conocen los valores de la función en puntos igualmente separados. Si se pueden cambiar los 
+% puntos en los cuales la función es evaluada otros métodos como la cuadratura de Gauss son probablemente más eficientes.
+% 
+%%
+% <<v2_eq01.png>>
+% 
+% 
+% <<v2_eq02.png>>
+% 
+% Funcion igual a un polinomio de grado 1,2,3...n que concide con la funcion en
+% determinados puntos mas un termino de error
+% 
+% <<v2_eq03.png>>
+% 
+% Formula cerrada de (n+1)puntos  de Newton-Cotes, donde:
+% 
+% <<v2_eq04.png>>
+% 
+% 
+% <<v2_eq05.png>>
+% 
+% Debemos encontrar el valor de xi como parte real y parte imaginaria.
+% 
+% <<v2_eq06.png>>
+% 
+% Realizamos la integral de la exponencial.
+% 
+% <<v2_eq07.png>>
+% 
+%%
+%
+% * 3. Métodos numéricos: Newton-Cotes, regla de Simpson, regla de 3/8 de Simpson, Integración 3
+% <https://www.youtube.com/watch?v=Ykgdo9Sr354>
+%%
+% Se utilizan los polinómios de intercalacion de lenguaje
+% 
+% <<v3_eq01.png>>
+%
+% 
+% <<v3_eq02.png>>
+%
+% formula cerrada de (n+1) puntos de Newton.
+% 
+% <<v3_eq03.png>>
+% 
+% 
+% 
+% <<v3_eq04.png>>
+% 
+% 
+% 
+% <<v3_eq05.png>>
+% 
+% 
+% 
+% <<v3_eq06.png>>
+% 
+% 
+% 
+% <<v3_eq07.png>>
+% 
+% 
+
+%%
+% * 4. Métodos numéricos: regla del trapecio compuesta , regla de Simpson compuesta, Integración 4
+% <https://www.youtube.com/watch?v=UJMZviPb6GE&t=1s>
+%%
+% Formulas cerradas de newton-Cotes Compuestas
+% se divide en varios trapecios para tener una mejor aproximacion de la
+% función.
+%%
+% <<V4_EQ1.PNG>>
+%
+%%
+% La regla compuesta del trapecio nos muestra la manupulacion del error de
+% que los puntos intermedios se tengran que evaluar dos veces.
+% 
+%%
+%
+% <<V4_EQ2.PNG>>
+%%
+%
+% En la regla compuesta de simpson estamos restringidos a que el numero de
+% subinterbalos sea par para que cada dos formen una parabola.
+%%
+%
+% <<V4_EQ3.PNG>>
+%%
+% * 5. Métodos numéricos: Cuadratura Gaussiana, Integración 5
+% <https://www.youtube.com/watch?v=6i4N328QbpY&t=3s>
+%
+%%
+% <<V5_EQ1.PNG>>
+%
+%%
+%% Desarrollo
+% Para el desarrollo se tienen que resolver cada uno de los siguientes
+% problemas comenzando una nueva sección (para la publicación) en cada uno de ellos.
+% 
+%% Problema 1 PR04
+% Realiza la convolución de las siguientes señales
+%
+% $g(t)=(1-t)[u(t)+u(-t-1)]+(t+1)[u(t-1)+(-t-2)]$
+%
+% $h(t)=u(t)+u(-t-1)$
+%
+%
+% La señal tiene como funcion analítica la siguiente imagen.
+%%
+% 
+% <<FORMULAPR04-1_1.PNG>>
+% 
+%%
+% El resultado de cada grafica y su comvolucion es el siguiente.
+%
+clear all
+figure(12)
+subplot(1,3,1)
+syms t
+x1=piecewise(t<0,0,0<t<1,1-t,1<t<2,t-1,t>2,0);
+fplot(x1,[-1,3],'r')
+grid on
+title('g(t)')
+xlabel('t')
+ylabel('g(t)')
+axis([-3 3 -3 3])
+subplot(1,3,2)
+x2=piecewise(t<0,0,0<t<1,1,t>1,0);
+fplot(x2,[0,3],'r')
+grid on
+title('h(t)')
+xlabel('t')
+ylabel('h(t)')
+axis([-2 2 -2 2])
+x=@(t) ((-1*t)+1).*(t>=0&t<=1) + (t-1).*(t>1&t<=2);
+y=@(t) 1.*(t>=0&t<=1);
+t1=(0:0.01:1);
+t2=(1:0.01:2);
+t3=(2:0.01:3);
+subplot(1,3,3)
+hold on
+plot(t1,(t1-(t1.^2/2)))
+plot(t2,((t2.^2)-3*t2+5/2))
+plot(t3,(-((t3.^2)/2)+2*t3-3/2))
+grid on
+title('x(t)*h(t)')
+axis([-1 3.6 -2 2]);
+%%
+% <<giff_1.gif>>
+%
+%% Problema 3 PR04
+% Realiza la convolución de las siguientes señales
+% 
+% $g(t)=t[u(t)+u(-t-1)]+[u(t-1)+u(-t-2)]$
+%
+% $h(t)=[u(t-1)+u(-t-3)]$
+%
+%
+% La señal tiene como funcion analítica la siguiente imagen.
+%%
+% <<FORMULAPR04-33.PNG>>
+%
+%%
+% El resultado de cada grafica y su comvolucion es el siguiente.
+%%
+clear all
+figure(13)
+subplot(1,3,1)
+syms t
+x1=piecewise(t<0,0,0<t<1,t,1<t<2,1,t>2,0);
+fplot(x1,[-1,3],'r')
+grid on
+title('g(t)')
+xlabel('t')
+ylabel('g(t)')
+axis([-3 3 -3 3])
+subplot(1,3,2)
+x2=piecewise(t<1,0,1<t<3,1,t>3,0);
+fplot(x2,[0,3],'r')
+grid on
+title('h(t)')
+xlabel('t')
+ylabel('h(t)')
+axis([-2 4 -2 2])
+t1=(1:0.01:2);
+t2=(2:0.01:3);
+t3=(3:0.01:4);
+t4=(4:0.01:5);
+subplot(1,3,3)
+hold on
+plot(t1,(((t1-1).^2)/2))
+plot(t2,(t2-(3/2)))
+plot(t3,(3/2-((t3-3).^2)/2))
+plot(t4,5-t4)
+grid on
+title('x(t)*h(t)')
+axis([-1 7 -2 2]);
+%%
+% <<PR4_02.GIF>>
+%
+%% Problema e) PR06
+% Realice la autocorrelacion de la siguiente señal
+%
+% $x1(t) = u(t) - 2u(t - 3) + u(t - 4)$
+%
+% Utiliza la equivalencia que prefieras
+%
+% la función analítica queda de la siguiente forma:
+%
+%%
+% <<FORMULAPR04-3.PNG>>
+%
+%%
+figure (10)
+x1 = @(t) heaviside(t)-(2.*heaviside(t-3))+heaviside(t-4);  % % Definimos un x1
+x11 = @(t) heaviside(-t)-(2.*heaviside(-t-3))+heaviside(-t-4); % % La invertimos
+subplot (1,4,1)
+syms t
+fplot (x1,[-10,10], 'r')
+grid on
+title ('x1(t)')
+axis ([-10 10, -5 5 ]);
+figure(11)
+t=[-10:0.01:10];
+plot (t, x11 (t))
+grid on
+title('x11(t)')
+axis([-10  10 , -5  5]);
+%%
+%
+% <<pr6_e.gif>>
+%
+%% Problema f) PR06
+%
+% Realiza la correlación de $R_x0x1(t)$ con las señales definidas en los ejercicios
+% anteriores, utiliza la equivalencia que prefieras 
+%
+% la función analítica queda de la siguiente forma:
+%
+% 
+%%
+% <<FORMULAPR04-4.PNG>>
+%
+%%
+figure( 1 )
+subplot (1,4,1)
+syms t
+x0 = @ (t) heaviside (t) - (2.*heaviside(t-2))+heaviside(t-4);
+fplot (x0,[-10 , 10], 'r' )
+grid on
+title ( 'x0(t)' )
+axis ([-10 10, -5 5]);
+subplot (1,4,2)
+x1 = @(t) heaviside(t)-( 2.*heaviside(t-3))+heaviside(t-4);
+fplot(x1, [-10 ,10 ], 'r' )
+hold on
+title('x1(t)')
+axis ([-10 10, -5 5]);
+%%
+% haciendo a x1 (-t) en x2
+%%
+x2 = @(t) heaviside(-t)-( 2.*heaviside (-t- 3 )) + heaviside (-t- 4 );
+%%
+%
+% <<pr6_f.gif>>
+%
+%%
+
+##### SOURCE END #####
+--></body></html>
